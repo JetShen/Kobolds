@@ -1,0 +1,215 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(EMPLOYEE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  companyId     String?
+  company       Company?       @relation(fields: [companyId], references: [id])
+  teamId        String?
+  team          Team?          @relation(fields: [teamId], references: [id])
+  activities    Activity[]
+  comments      Comment[]
+  invitations   Invitation[]
+  createdTeams  Team[]         @relation("TeamCreator")
+  
+  @@index([companyId])
+  @@index([teamId])
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  logo        String?
+  website     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       User[]
+  teams       Team[]
+  sectors     Sector[]
+  activities  Activity[]
+  invitations Invitation[]
+}
+
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  creatorId   String
+  creator     User     @relation("TeamCreator", fields: [creatorId], references: [id])
+  users       User[]
+  activities  Activity[]
+  sectors     Sector[]
+
+  @@index([companyId])
+  @@index([creatorId])
+}
+
+model Sector {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  teamId      String?
+  team        Team?    @relation(fields: [teamId], references: [id])
+  activities  Activity[]
+
+  @@index([companyId])
+  @@index([teamId])
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      Status   @default(CREATED)
+  priority    Priority @default(MEDIUM)
+  startDate   DateTime?
+  dueDate     DateTime?
+  completedAt DateTime?
+  timeSpent   Int?     @default(0) // Time spent in minutes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  teamId      String?
+  team        Team?    @relation(fields: [teamId], references: [id])
+  sectorId    String?
+  sector      Sector?  @relation(fields: [sectorId], references: [id])
+  assigneeId  String?
+  assignee    User?    @relation(fields: [assigneeId], references: [id])
+  comments    Comment[]
+
+  @@index([companyId])
+  @@index([teamId])
+  @@index([sectorId])
+  @@index([assigneeId])
+}
+
+enum Status {
+  CREATED
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  activityId  String
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+
+  @@index([activityId])
+  @@index([authorId])
+}
+
+model Invitation {
+  id          String        @id @default(cuid())
+  email       String
+  role        Role          @default(EMPLOYEE)
+  token       String        @unique
+  status      InviteStatus  @default(PENDING)
+  expiresAt   DateTime
+  createdAt   DateTime      @default(now())
+  
+  companyId   String
+  company     Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  inviterId   String
+  inviter     User          @relation(fields: [inviterId], references: [id])
+
+  @@index([companyId])
+  @@index([inviterId])
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
