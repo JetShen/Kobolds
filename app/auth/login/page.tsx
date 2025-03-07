@@ -39,13 +39,18 @@ export default function LoginPage() {
     setIsLoading(true)
     
     try {
-      const response = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-      })
+      const { email, password } = data
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const responseData = await response.json();
 
-      if (response?.error) {
+      if (responseData?.error) {
         toast({
           title: "Error",
           description: "Invalid email or password",
