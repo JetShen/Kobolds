@@ -200,7 +200,11 @@ export function Sidebar({ className }: SidebarProps) {
               variant="ghost"
               className="w-full justify-start text-muted-foreground"
             >
-              <Link href="/auth/logout">
+              <Link href="/api/auth/logout" onClick={async (e) => {
+                e.preventDefault()
+                await fetch("/api/auth/logout")
+                window.location.href = "/"
+              }}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Link>

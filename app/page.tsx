@@ -4,9 +4,9 @@ import { ArrowRight, BarChart3, Lock, Users } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+    <div className="flex min-h-screen  flex-col">
+      <header className="sticky top-0 z-50 w-full border-b  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-16 items-center justify-between p-5">
           <div className="flex items-center gap-2 font-bold">
             <BarChart3 className="h-6 w-6" />
             <span>Enterprise App</span>
@@ -34,7 +34,7 @@ export default function Home() {
       </header>
       <main className="flex-1">
         <section className="w-full py-24 md:py-32">
-          <div className="container px-4 md:px-6">
+          <div className="flex flex-row justify-center px-4 md:px-6">
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
               <div className="flex flex-col justify-center space-y-6">
                 <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function Home() {
           </div>
         </section>
         <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
+          <div className="px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -116,7 +116,7 @@ export default function Home() {
         </section>
       </main>
       <footer className="w-full border-t py-6">
-        <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row p-5">
           <div className="flex items-center gap-2">
             <BarChart3 className="h-6 w-6" />
             <span className="font-bold">Enterprise App</span>
