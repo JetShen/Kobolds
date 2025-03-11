@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
+import { cookies } from 'next/headers'
 
 export async function POST(req: Request) {
     try {
       const body = await req.json();
-      console.log('Body:', body);
   
       const { email, password } = body;
   
@@ -21,7 +21,6 @@ export async function POST(req: Request) {
           email,
         },
       });
-      console.log('User:', user);
   
       if (!user || !user.password) {
         return NextResponse.json(
@@ -31,7 +30,6 @@ export async function POST(req: Request) {
       }
   
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      console.log('Password valid:', isPasswordValid);
   
       if (!isPasswordValid) {
         return NextResponse.json(
@@ -39,8 +37,12 @@ export async function POST(req: Request) {
           { status: 401 }
         );
       }
-  
-      const token = 'your_jwt_token_here';
+      const cookieStore = cookies()
+      const sessionCookie = cookieStore.set('session', JSON.stringify(user.role), {
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      const token = 'token'; // TODO: Implement JWT
       return NextResponse.json(
         { token, user: { id: user.id, name: user.name, email: user.email, role: user.role } },
         { status: 200 }
