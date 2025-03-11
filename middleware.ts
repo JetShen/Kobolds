@@ -10,11 +10,7 @@ export default async function Middleware(req: NextRequest) {
   }
 
   if (sessionCookie) {
-    const user = JSON.parse(sessionCookie);
-    console.log('User middleware:', user);
-
-    const role = user.role;
-
+    const role = JSON.parse(sessionCookie);
     if (pathname.startsWith('/dashboard/admin') && role !== 'ADMIN') {
       return NextResponse.redirect(new URL('/dashboard', req.url));
     }

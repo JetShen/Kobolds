@@ -1,6 +1,5 @@
 "use client"
 
-import { useSession } from "next-auth/react"
 import { Bell, Menu, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -15,8 +14,7 @@ interface HeaderProps {
 }
 
 export function Header({ title }: HeaderProps) {
-  const { data: session } = useSession()
-  const user = session?.user
+  const user = { name: "John Doe" }
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">

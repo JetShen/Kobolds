@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
 import { 
   BarChart3, 
   Building, 
@@ -30,8 +30,27 @@ interface SidebarProps {
 
 export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
-  const { data: session } = useSession()
-  const role = session?.user?.role
+  const [role, setRole] = useState<string | null>(null)
+  
+  const getCookie = (name: string): string | null => {
+    if (typeof document === 'undefined') return null;
+    
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + '=')) {
+        return cookie.substring(name.length + 1);
+      }
+    }
+    return null;
+  };
+  
+  useEffect(() => {
+    const sessionCookie = getCookie('session');
+    if (sessionCookie) {
+      setRole(sessionCookie);
+    }
+  }, []);
 
   const isAdmin = role === "ADMIN"
   const isManager = role === "MANAGER" || isAdmin

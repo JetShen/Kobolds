@@ -1,6 +1,5 @@
 "use client"
 
-import { useSession } from "next-auth/react"
 import { 
   BarChart, 
   BarChart3, 
@@ -43,9 +42,6 @@ const statusData = [
 ]
 
 export default function DashboardPage() {
-  const { data: session } = useSession()
-  const user = session?.user
-  
   return (
     <div className="flex flex-col min-h-screen">
       <Header title="Dashboard" />
