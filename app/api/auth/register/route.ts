@@ -16,7 +16,6 @@ export async function POST(req: Request) {
     
     const { name, email, password } = registerSchema.parse(body)
 
-    // Check if user already exists
     const existingUser = await db.user.findUnique({
       where: {
         email,
@@ -30,20 +29,17 @@ export async function POST(req: Request) {
       )
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Create user
     const user = await db.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: "ADMIN", // First user is admin by default
+        role: "ADMIN",
       },
     })
 
-    // Remove password from response
     const { password: _, ...userWithoutPassword } = user
 
     return NextResponse.json(
