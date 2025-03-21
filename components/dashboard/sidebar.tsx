@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
 import { 
   BarChart3, 
   Building, 
@@ -15,7 +14,6 @@ import {
   Settings, 
   Users 
 } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,30 +26,8 @@ interface SidebarProps {
   className?: string
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, role} : {className: SidebarProps, role: string}) {
   const pathname = usePathname()
-  const [role, setRole] = useState<string | null>(null)
-  
-  const getCookie = (name: string): string | null => {
-    if (typeof document === 'undefined') return null;
-    
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith(name + '=')) {
-        return cookie.substring(name.length + 1);
-      }
-    }
-    return null;
-  };
-  
-  useEffect(() => {
-    const sessionCookie = getCookie('session');
-    if (sessionCookie) {
-      setRole(sessionCookie);
-    }
-  }, []);
-
   const isAdmin = role === "ADMIN"
   const isManager = role === "MANAGER" || isAdmin
 

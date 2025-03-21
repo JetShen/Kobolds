@@ -21,9 +21,9 @@ interface NewTaskModalProps {
   onClose: () => void;
   onSubmit: (task: Task) => Promise<void>;
   companyId: string;
-  teams?: { id: string; name: string }[];
-  sectors?: { id: string; name: string }[];
-  users?: { id: string; name: string }[];
+  teams?: {  name: string }[];
+  sectors?: { name: string }[];
+  users?: { name: string | null }[];
 }
 
 export const NewTaskModal = ({
@@ -125,8 +125,8 @@ export const NewTaskModal = ({
               <SelectValue placeholder="Select Assignee" />
             </SelectTrigger>
             <SelectContent>
-              {users.map((user) => (
-                <SelectItem key={user.id} value={user.name}>
+              {users.map((user, y) => (
+                <SelectItem key={y} value={user.name?? "Unassigned Name"}>
                   {user.name}
                 </SelectItem>
               ))}
@@ -142,8 +142,8 @@ export const NewTaskModal = ({
                 <SelectValue placeholder="Select Team" />
               </SelectTrigger>
               <SelectContent>
-                {teams.map((team) => (
-                  <SelectItem key={team.id} value={team.name}>
+                {teams.map((team, j) => (
+                  <SelectItem key={j} value={team.name}>
                     {team.name}
                   </SelectItem>
                 ))}
@@ -160,8 +160,8 @@ export const NewTaskModal = ({
                 <SelectValue placeholder="Select Sector" />
               </SelectTrigger>
               <SelectContent>
-                {sectors.map((sector) => (
-                  <SelectItem key={sector.id} value={sector.name}>
+                {sectors.map((sector, x) => (
+                  <SelectItem key={x} value={sector.name}>
                     {sector.name}
                   </SelectItem>
                 ))}

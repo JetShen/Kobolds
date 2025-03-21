@@ -19,9 +19,8 @@ export async function POST(req: Request) {
     const user = await db.user.findUnique({
       where: {
         email,
-      },
+      }
     });
-
     if (!user || !user.password) {
       return NextResponse.json(
         { message: 'Invalid credentials' },
@@ -37,8 +36,17 @@ export async function POST(req: Request) {
         { status: 401 }
       );
     }
-    const cookieStore = cookies()
+    const cookieStore = cookies() // temporary solution until we have a better security strategy 
+
     cookieStore.set('session', JSON.stringify(user.role), {
+      maxAge: 60 * 60 * 24 * 7,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+
+    cookieStore.set('companyId', JSON.stringify(user.companyId), {
       maxAge: 60 * 60 * 24 * 7,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

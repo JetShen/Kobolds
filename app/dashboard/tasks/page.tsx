@@ -24,7 +24,9 @@ import { Header } from "@/components/dashboard/header"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { NewTaskModal } from "@/components/dashboard/NewTask";
-import { tasks, employees, sectors, teams, getPriorityColor, getStatusColor, getStatusLabel } from "@/lib/helpers";
+import { tasks, getPriorityColor, getStatusColor, getStatusLabel } from "@/lib/helpers";
+import useTaskData from "@/hooks/useData";
+import { useCompany } from "@/components/context/CompanyContext"; 
 
 type Task = {
   title: string;
@@ -38,12 +40,14 @@ type Task = {
   sector?: string;
 };
 
-export default function TasksPage() {
+
+export default function TasksPage()  {
+  const { companyId } = useCompany();
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("ALL")
   const [priorityFilter, setPriorityFilter] = useState("ALL")
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const { sectors, teams, employees } = useTaskData(companyId || "");
   const filteredTasks = tasks.filter(task => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       task.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,28 +63,9 @@ export default function TasksPage() {
   const inProgressTasks = filteredTasks.filter(task => task.status === "IN_PROGRESS")
   const completedTasks = filteredTasks.filter(task => task.status === "COMPLETED")
 
-
   const handleCreateTask = async (task: Task) => {
     console.log("Creating task:", task);
-    // try {
-    //   const response = await fetch("/api/task/new", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(task),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("Failed to create task");
-    //   }
-
-    // } catch (error) {
-    //   console.error("Error creating task:", error);
-    // }
   };
-
-
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -295,7 +280,7 @@ export default function TasksPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleCreateTask}
-        companyId="1"
+        companyId={companyId || ""}
         sectors={sectors}
         teams={teams}
         users={employees}
