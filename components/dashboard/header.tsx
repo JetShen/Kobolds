@@ -8,13 +8,17 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getRole } from "@/app/dashboard/layout"
 
 interface HeaderProps {
   title: string
 }
-
+interface SidebarProps {
+  className?: string;
+}
 export function Header({ title }: HeaderProps) {
   const user = { name: "John Doe" }
+  const role = getRole();
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -26,7 +30,7 @@ export function Header({ title }: HeaderProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="p-0">
-          <Sidebar />
+          <Sidebar className={"w-64 border-r" as SidebarProps} role={role} />
         </SheetContent>
       </Sheet>
       
