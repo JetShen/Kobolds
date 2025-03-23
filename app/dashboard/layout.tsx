@@ -26,10 +26,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const companyId = getCompanyId();
 
   return (
-    <CompanyProvider companyId={companyId}>
+    <CompanyProvider companyId={companyId} role={role}>
       <div className="flex min-h-screen">
         <div className="hidden md:block">
-          <Sidebar className={"w-64 border-r" as SidebarProps} role={role} />
+          <Sidebar className={"w-64 border-r" as SidebarProps} />
         </div>
         <div className="flex-1">{children}</div>
       </div>

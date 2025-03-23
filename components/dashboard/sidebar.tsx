@@ -21,13 +21,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
+import { useCompany } from "@/components/context/CompanyContext";
 
 interface SidebarProps {
   className?: string
 }
 
-export function Sidebar({ className, role} : {className: SidebarProps, role: string}) {
+export function Sidebar({ className} : {className: SidebarProps}) {
   const pathname = usePathname()
+  const { role } = useCompany()
   const isAdmin = role === "ADMIN"
   const isManager = role === "MANAGER" || isAdmin
 

@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { NewTaskModal } from "@/components/dashboard/NewTask";
 import { tasks, getPriorityColor, getStatusColor, getStatusLabel } from "@/lib/helpers";
 import useTaskData from "@/hooks/useData";
-import { useCompany } from "@/components/context/CompanyContext"; 
+import { useCompany } from "@/components/context/CompanyContext";
 
 type Task = {
   title: string;
