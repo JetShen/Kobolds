@@ -20,11 +20,9 @@ export async function GET(req: Request) {
                 companyId
             }
         });
+        // console.log("Teams:", teams);
 
-        return NextResponse.json(
-            { teams: teams },
-            { status: 200 }
-        );
+        return NextResponse.json(teams, { status: 200 });
 
     } catch (error) {
         return NextResponse.json(

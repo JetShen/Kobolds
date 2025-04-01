@@ -47,6 +47,10 @@ export const NewTaskModal = ({
     sector: "",
   });
 
+  // console.log("Teams:", teams);
+  // console.log("Sectors:", sectors);
+  // console.log("Users:", users);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTask((prev) => ({ ...prev, [name]: value }));

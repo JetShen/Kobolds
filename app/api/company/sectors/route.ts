@@ -21,10 +21,7 @@ export async function GET(req: Request) {
             }
         });
 
-        return NextResponse.json(
-            { sectors: sectors },
-            { status: 200 }
-        );
+        return NextResponse.json(sectors, { status: 200 });
 
     } catch (error) {
         return NextResponse.json(

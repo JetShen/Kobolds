@@ -19,6 +19,7 @@ export async function GET(req: Request) {
             },
         });
 
+        // console.log("Employees:", employees);
         return NextResponse.json(employees, { status: 200 });
 
 
